@@ -34,6 +34,9 @@
 
 - (NSArray *)synchronizedCommandsMatching:(NSPredicate *)predicate
 {
+    if(predicate == nil) {
+        return self.synchronizedCommandsCopy.copy;
+    }
     return [self.synchronizedCommandsCopy filteredArrayUsingPredicate:predicate];
 }
 
@@ -93,8 +96,14 @@
                   isExecuted:(BOOL)isExecuted;
 {
     cls = cls ?: [RZBCommand class];
-    return [self synchronizedCommandsMatching:[cls predicateMatchingUUIDPath:UUIDPath
-                                                                  isExecuted:isExecuted]];
+    
+    if(UUIDPath != nil) {
+        NSPredicate *predicate = [cls predicateMatchingUUIDPath:UUIDPath
+                                                     isExecuted:isExecuted];
+        return [self synchronizedCommandsMatching:predicate];
+    } else {
+        return [self synchronizedCommandsMatching:nil];
+    }
 }
 
 - (id)commandOfClass:(Class)cls

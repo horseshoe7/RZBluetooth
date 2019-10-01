@@ -403,7 +403,10 @@
             RZBLog(RZBLogLevelWriteCommandData, @"Data=%@", self.data);
 
             [peripheral writeValue:self.data forCharacteristic:characteristic type:self.writeType];
-            self.isCompleted = (self.writeType == CBCharacteristicWriteWithoutResponse);
+#warning should I wait for the peripheral delegate callback?
+            
+            // it should run in the delegate callback
+            //self.isCompleted = (self.writeType == CBCharacteristicWriteWithoutResponse);
         }
         isReady = (characteristic != nil);
     }

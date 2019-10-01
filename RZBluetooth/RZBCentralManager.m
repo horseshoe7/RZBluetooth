@@ -412,6 +412,15 @@
                            withObject:characteristic
                                 error:error];
 }
+    
+- (void)peripheralIsReadyToSendWriteWithoutResponse:(CBPeripheral *)corePeripheral
+{
+    RZBLogDelegate(@"%@ - %@", NSStringFromSelector(_cmd), RZBLogIdentifier(corePeripheral));
+    [self completeFirstCommandOfClass:[RZBWriteCharacteristicCommand class]
+                     matchingUUIDPath:nil
+                           withObject:nil
+                                error:nil];
+}
 
 - (void)peripheral:(CBPeripheral *)corePeripheral didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
 {
