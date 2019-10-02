@@ -45,6 +45,7 @@ typedef void(^RZBConnectionBlock)(RZBPeripheralStateEvent state, NSError *__null
 
 typedef void(^RZBServiceBlock)(CBService *__nullable service, NSError *__nullable error);
 typedef void(^RZBCharacteristicBlock)(CBCharacteristic *__nullable characteristic, NSError *__nullable error);
+typedef NSData *__nullable(^RZBWriteContinuationBlock)(void);
 
 NS_ASSUME_NONNULL_END
 

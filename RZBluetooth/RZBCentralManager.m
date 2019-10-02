@@ -18,6 +18,7 @@
 #import "RZBPeripheralStateEvent.h"
 #import <TargetConditionals.h>
 #import <objc/runtime.h>
+#import "CBPeripheral+RZBluetooth.h"
 
 @implementation RZBCentralManager
 
@@ -416,10 +417,45 @@
 - (void)peripheralIsReadyToSendWriteWithoutResponse:(CBPeripheral *)corePeripheral
 {
     RZBLogDelegate(@"%@ - %@", NSStringFromSelector(_cmd), RZBLogIdentifier(corePeripheral));
-    [self completeFirstCommandOfClass:[RZBWriteCharacteristicCommand class]
-                     matchingUUIDPath:nil
-                           withObject:nil
-                                error:nil];
+    
+    if(corePeripheral.currentCharacteristic == nil ||
+       corePeripheral.currentServiceUUID == nil) {
+        return;
+    }
+    
+    // get first command of our custom class
+    RZBUUIDPath *path = RZBUUIDP(corePeripheral.identifier, corePeripheral.currentServiceUUID, corePeripheral.currentCharacteristic.UUID);
+    
+    // check if there's a continuation block
+    
+    NSArray *commands = [self.dispatch commandsOfClass:[RZBWriteResponselessChunksCommand class]
+                                      matchingUUIDPath:path
+                                            isExecuted:YES];
+    
+    RZBWriteResponselessChunksCommand *cmd = commands.firstObject;
+    
+    if(cmd == nil) {
+        return;
+    } else {
+        // check if continuation block and that block returns data
+        if(cmd.continuationBlock) {
+            NSData *nextSlice = cmd.continuationBlock();
+            if (nextSlice) {
+                [corePeripheral writeValue:nextSlice forCharacteristic:corePeripheral.currentCharacteristic type:CBCharacteristicWriteWithoutResponse];
+                return;
+            }
+        }
+        
+        // else
+        if (!cmd.isCompleted) {
+            
+            [self.dispatch completeCommand:cmd
+                                withObject:corePeripheral.currentCharacteristic
+                                     error:nil];
+            corePeripheral.currentCharacteristic = nil;
+            corePeripheral.currentServiceUUID = nil;
+        }
+    }
 }
 
 - (void)peripheral:(CBPeripheral *)corePeripheral didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error

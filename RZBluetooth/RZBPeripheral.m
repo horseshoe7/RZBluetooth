@@ -230,6 +230,20 @@ characteristicUUID:(CBUUID *)characteristicUUID
     [self.dispatch dispatchCommand:cmd];
 }
 
+- (void)writeDataWithoutResponse:(NSData *)data
+              characteristicUUID:(CBUUID *)characteristicUUID
+                     serviceUUID:(CBUUID *)serviceUUID
+                    continuation:(RZBWriteContinuationBlock)continuation {
+    NSParameterAssert(data);
+    
+    RZBUUIDPath *path = RZBUUIDP(self.identifier, serviceUUID, characteristicUUID);
+    RZBWriteResponselessChunksCommand *cmd = [[RZBWriteResponselessChunksCommand alloc] initWithUUIDPath:path];
+    cmd.data = data;
+    cmd.continuationBlock = continuation;
+    [self.dispatch dispatchCommand:cmd];
+}
+
+
 - (void)writeData:(NSData *)data
 characteristicUUID:(CBUUID *)characteristicUUID
       serviceUUID:(CBUUID *)serviceUUID

@@ -136,6 +136,19 @@ characteristicUUID:(CBUUID *)characteristicUUID
       serviceUUID:(CBUUID *)serviceUUID;
 
 /**
+ * Write the data to a specific characteristic.
+ *
+ * @param data The data to write to the characteristic.  If you are writing in chunks, write only the chunk, then use the continuation block to return more slices.
+ * @param continuation if nil, it means you're just sending one packet.  If non-nil, you have to return the next chunk of data, or return nil in that block to indicate you're finished with the command.
+ *
+ * @note If the length of data is greater than the MTU Length (Default is 20 bytes), the behaviour is undefined, so make sure you know what you're doing.
+ */
+- (void)writeDataWithoutResponse:(NSData *)data
+characteristicUUID:(CBUUID *)characteristicUUID
+      serviceUUID:(CBUUID *)serviceUUID
+       continuation:(RZBWriteContinuationBlock)continuation;
+
+/**
  * Write the data to a specific characteristic and wait for a response from the
  * device. This is the same as the above command with a completion block.
  *

@@ -115,6 +115,12 @@ typedef void(^RZBCallbackBlock)(id object, NSError *error);
 
 @end
 
+@interface RZBWriteResponselessChunksCommand: RZBWriteCharacteristicCommand
+
+@property (copy, nonatomic, nullable) RZBWriteContinuationBlock continuationBlock;
+
+@end
+
 @interface RZBScanCommand : RZBCommand
 
 @property (copy, nonatomic) NSArray *serviceUUIDs;

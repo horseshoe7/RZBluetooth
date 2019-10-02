@@ -12,6 +12,7 @@
 #import "RZBCentralManager+CommandHelper.h"
 #import "RZBPeripheral+Private.h"
 #import "RZBLog+Private.h"
+#import "CBPeripheral+RZBluetooth.h"
 
 #define RZBoolString(value) (value ? @"YES" : @"NO")
 
@@ -402,15 +403,43 @@
             RZBLogCommand(@"%@ writeData:<data> forCharacteristic:%@ type:%@", RZBLogIdentifier(peripheral), self.characteristicUUID, @(self.writeType));
             RZBLog(RZBLogLevelWriteCommandData, @"Data=%@", self.data);
 
-            [peripheral writeValue:self.data forCharacteristic:characteristic type:self.writeType];
-#warning should I wait for the peripheral delegate callback?
+            if([self isKindOfClass:[RZBWriteResponselessChunksCommand class]]) {
+                // we need these in a callback that doesn't provide that context
+                peripheral.currentCharacteristic = characteristic;
+                peripheral.currentServiceUUID = service.UUID;
+            }
             
-            // it should run in the delegate callback
-            //self.isCompleted = (self.writeType == CBCharacteristicWriteWithoutResponse);
+            // if write type is without response, this picks up in the CBPeripheralDelegate 
+            [peripheral writeValue:self.data forCharacteristic:characteristic type:self.writeType];
+            
+            if([self isKindOfClass:[RZBWriteResponselessChunksCommand class]]) {
+                if ([(RZBWriteResponselessChunksCommand*)self continuationBlock] == nil) {
+                    self.isCompleted = YES;
+                } else {
+                    // it should run in the delegate callback
+                    self.isCompleted = NO;
+                }
+            } else {
+                self.isCompleted = (self.writeType == CBCharacteristicWriteWithoutResponse);
+            }
+            
+            if (self.isCompleted) {
+                peripheral.currentCharacteristic = nil;
+                peripheral.currentServiceUUID = nil;
+            }
         }
         isReady = (characteristic != nil);
     }
     return isReady;
+}
+
+@end
+
+@implementation RZBWriteResponselessChunksCommand
+
+- (CBCharacteristicWriteType)writeType
+{
+    return CBCharacteristicWriteWithoutResponse;
 }
 
 @end
