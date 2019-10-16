@@ -20,20 +20,6 @@
                ReferencedContainer = "container:RZBluetooth.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AB45C4A31B6BF70B00CC0166"
-               BuildableName = "RZBluetoothTests.xctest"
-               BlueprintName = "RZBluetoothTests"
-               ReferencedContainer = "container:RZBluetooth.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction

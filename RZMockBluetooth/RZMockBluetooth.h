@@ -20,4 +20,6 @@
 #import "RZBSimulatedConnection.h"
 #import "RZBSimulatedCallback.h"
 #import "NSError+RZBMock.h"
+
+#import "RZBSimulatedDevice+RZBBatteryLevel.h"
 #import "RZBLog.h"

@@ -39,15 +39,4 @@ RZBluetooth is a Core Bluetooth helper with 3 primary goals:
     mock.private_header_files = "RZMockBluetooth/**/*+Private.h"
   end
 
-  s.subspec "Test" do |test|
-    # Disable Watch Platform
-    test.osx.deployment_target = "10.10"
-    test.ios.deployment_target = "8.0"
-    test.dependency "RZBluetooth/Mock"
-    test.frameworks = "XCTest"
-    test.source_files = "RZBluetoothTests/RZBTestDefines.h",
-                        "RZBluetoothTests/RZBSimulatedTestCase.{h,m}",
-                        "RZBluetoothTests/Helpers/NSRunLoop+RZBWaitFor.{h,m}"
-    test.public_header_files = "RZBluetoothTests/RZBSimulatedTestCase.h", "RZBluetoothTests/RZBTestDefines.h"
-  end
 end

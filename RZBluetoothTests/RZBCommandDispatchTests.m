@@ -8,6 +8,8 @@
 
 @import XCTest;
 
+#import "RZBluetooth/RZBluetooth.h"
+#import "RZBluetooth/RZMockBluetooth.h"
 #import "RZBCommandDispatch.h"
 #import "RZTestCommands.h"
 #import "XCTestCase+Helpers.h"

@@ -8,7 +8,7 @@
 
 @import XCTest;
 #import "RZBSimulatedTestCase.h"
-#import "RZBPeripheral+Private.h"
+#import "RZBluetooth/RZBPeripheral+Private.h"
 #import "CBUUID+TestUUIDs.h"
 
 @interface RZBPeripheralTests : RZBSimulatedTestCase
